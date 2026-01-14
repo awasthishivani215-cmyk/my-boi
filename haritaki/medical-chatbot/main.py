@@ -1,41 +1,38 @@
 # main.py
-SESSIONS = {}
-
-
-from flask import Flask, render_template, request, jsonify
-from flask_cors import CORS
 import os
+from flask import Flask, render_template, request, jsonify, send_from_directory
+from flask_cors import CORS
 from datetime import datetime
 from medical_api import MedicalChatbot
 from report_generator import ReportGenerator
 import uuid
-from flask import send_from_directory
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+SESSIONS = {}
 
+# Get PORT from Railway environment
+PORT = int(os.environ.get("PORT", 5000))
+
+# Create Flask app
 app = Flask(
     __name__,
-    template_folder=os.path.join(BASE_DIR, "templates"),
-    static_folder=os.path.join(BASE_DIR, "static")
+    template_folder=os.path.join(os.path.dirname(__file__), "templates"),
+    static_folder=os.path.join(os.path.dirname(__file__), "static")
 )
 
-app.secret_key = 'medical-chatbot-secret-key-2024'
+app.secret_key = os.environ.get("SECRET_KEY", 'medical-chatbot-secret-key-2024')
 CORS(app)
 
 # Initialize chatbot
 chatbot = MedicalChatbot()
 
-
 @app.route('/reports/<path:filename>')
 def download_report(filename):
-    reports_dir = os.path.join(BASE_DIR, 'reports')
+    reports_dir = os.path.join(os.path.dirname(__file__), 'reports')
     return send_from_directory(reports_dir, filename, as_attachment=True)
-
 
 @app.route('/')
 def home():
     return render_template('index.html')
-
 
 @app.route('/api/start_session', methods=['POST'])
 def start_session():
@@ -62,7 +59,6 @@ def start_session():
         "session_id": session_id,
         "message": welcome_msg
     })
-
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
@@ -107,7 +103,6 @@ def chat():
         'session_id': session_id
     })
 
-
 @app.route('/api/diagnosis', methods=['POST'])
 def get_diagnosis():
     data = request.json
@@ -120,7 +115,6 @@ def get_diagnosis():
     diagnosis = chatbot.get_diagnosis(symptoms, patient_data)
     return jsonify(diagnosis)
 
-
 @app.route('/api/treatment', methods=['POST'])
 def get_treatment():
     data = request.json
@@ -132,7 +126,6 @@ def get_treatment():
 
     treatment = chatbot.get_treatment_plan(diagnosis, patient_data)
     return jsonify(treatment)
-
 
 @app.route('/api/generate_report', methods=['POST'])
 def generate_report():
@@ -159,7 +152,6 @@ def generate_report():
         'message': 'Report generated successfully'
     })
 
-
 @app.route('/api/save_patient_record', methods=['POST'])
 def save_patient_record():
     data = request.json
@@ -183,13 +175,18 @@ def save_patient_record():
         'message': 'Patient record saved successfully'
     })
 
+@app.route('/health')
+def health_check():
+    return jsonify({"status": "healthy", "service": "medical-chatbot"})
 
 if __name__ == '__main__':
+    # Create necessary directories
     os.makedirs('patient_records', exist_ok=True)
-    os.makedirs(os.path.join(BASE_DIR, 'reports'), exist_ok=True)
+    os.makedirs('reports', exist_ok=True)
     os.makedirs('templates', exist_ok=True)
     os.makedirs('static', exist_ok=True)
     os.makedirs('static/css', exist_ok=True)
     os.makedirs('static/js', exist_ok=True)
-
-    app.run(debug=True, port=5000)
+    
+    # Run app
+    app.run(host='0.0.0.0', port=PORT, debug=False)
