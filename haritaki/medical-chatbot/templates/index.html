@@ -1,0 +1,444 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. HealthAI - AI Medical Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Dr. HealthAI</h1>
+                    <p>AI-Powered Medical Assistant</p>
+                </div>
+            </div>
+            <div class="header-info">
+                <div class="status-indicator">
+                    <span class="status-dot active"></span>
+                    <span>Online & Ready to Help</span>
+                </div>
+                <div class="emergency-contact">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>Emergency: Call 911</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Sidebar - Patient Info -->
+            <aside class="sidebar">
+                <div class="patient-profile">
+                    <div class="profile-header">
+                        <i class="fas fa-user-md"></i>
+                        <h3>Patient Information</h3>
+                    </div>
+                    
+                    <div class="profile-form" id="patient-form">
+                        <div class="form-group">
+                            <label for="patient-name">
+                                <i class="fas fa-user"></i> Full Name
+                            </label>
+                            <input type="text" id="patient-name" placeholder="Enter your full name">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="patient-age">
+                                    <i class="fas fa-birthday-cake"></i> Age
+                                </label>
+                                <input type="number" id="patient-age" placeholder="Age" min="1" max="120">
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-gender">
+                                    <i class="fas fa-venus-mars"></i> Gender
+                                </label>
+                                <select id="patient-gender">
+                                    <option value="">Select</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                    <option value="prefer-not-to-say">Prefer not to say</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="patient-contact">
+                                <i class="fas fa-phone"></i> Contact (Optional)
+                            </label>
+                            <input type="text" id="patient-contact" placeholder="Email or Phone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="medical-history">
+                                <i class="fas fa-file-medical"></i> Medical History
+                            </label>
+                            <textarea id="medical-history" rows="3" placeholder="Any medical conditions, allergies, or current medications"></textarea>
+                        </div>
+                        
+                        <button class="btn-primary" id="start-consultation">
+                            <i class="fas fa-play-circle"></i> Start Consultation
+                        </button>
+                        
+                        <div class="disclaimer">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <small>This is an AI assistant. For emergencies, seek immediate medical help.</small>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-display" id="patient-display" style="display: none;">
+                        <div class="profile-card">
+                            <div class="profile-header">
+                                <div class="avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div class="profile-info">
+                                    <h4 id="display-name">John Doe</h4>
+                                    <p id="display-age-gender">35 years, Male</p>
+                                </div>
+                            </div>
+                            <div class="profile-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span id="display-contact">john@example.com</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-file-medical-alt"></i>
+                                    <span id="display-history">No significant history</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <span id="display-session">Session Active</span>
+                                </div>
+                            </div>
+                            <button class="btn-secondary" id="edit-profile">
+                                <i class="fas fa-edit"></i> Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quick-actions">
+                    <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
+                    <button class="action-btn" id="symptom-checker">
+                        <i class="fas fa-stethoscope"></i> Symptom Checker
+                    </button>
+                    <button class="action-btn" id="generate-report">
+                        <i class="fas fa-file-pdf"></i> Generate Report
+                    </button>
+                    <button class="action-btn" id="medication-info">
+                        <i class="fas fa-pills"></i> Medication Info
+                    </button>
+                    <button class="action-btn" id="emergency-guide">
+                        <i class="fas fa-ambulance"></i> Emergency Guide
+                    </button>
+                </div>
+                
+                <div class="health-tips">
+                    <h4><i class="fas fa-lightbulb"></i> Health Tips</h4>
+                    <div class="tip">
+                        <i class="fas fa-glass-water"></i>
+                        <p>Stay hydrated - Drink at least 8 glasses of water daily</p>
+                    </div>
+                    <div class="tip">
+                        <i class="fas fa-walking"></i>
+                        <p>Regular exercise improves both physical and mental health</p>
+                    </div>
+                    <div class="tip">
+                        <i class="fas fa-bed"></i>
+                        <p>Get 7-9 hours of quality sleep each night</p>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Chat Area -->
+            <main class="chat-container">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="doctor-info">
+                        <div class="doctor-avatar">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div>
+                            <h2>Dr. HealthAI</h2>
+                            <p class="doctor-specialty">AI Medical Assistant</p>
+                        </div>
+                    </div>
+                    <div class="chat-controls">
+                        <button class="icon-btn" id="clear-chat" title="Clear Chat">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="icon-btn" id="save-chat" title="Save Conversation">
+                            <i class="fas fa-save"></i>
+                        </button>
+                        <button class="icon-btn" id="voice-input" title="Voice Input">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Welcome Message -->
+                    <div class="message doctor-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="sender">Dr. HealthAI</span>
+                                <span class="time">Just now</span>
+                            </div>
+                            <div class="message-text">
+                                <p>👨‍⚕️ Welcome! I'm Dr. HealthAI, your AI medical assistant.</p>
+                                <p>To get started, please enter your information on the left and click "Start Consultation".</p>
+                                <p>I can help you with:</p>
+                                <ul>
+                                    <li>Symptom analysis and diagnosis</li>
+                                    <li>Treatment recommendations</li>
+                                    <li>Medication information</li>
+                                    <li>Medical reports and summaries</li>
+                                </ul>
+                                <p>Let's begin by getting to know you better!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Typing Indicator -->
+                <div class="typing-indicator" id="typing-indicator">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <p>Dr. HealthAI is typing...</p>
+                </div>
+                
+                <!-- Input Area -->
+                <div class="chat-input-container">
+                    <div class="input-tools">
+                        <button class="tool-btn" title="Add Symptoms">
+                            <i class="fas fa-plus-circle"></i> Symptoms
+                        </button>
+                        <button class="tool-btn" title="Attach Files">
+                            <i class="fas fa-paperclip"></i> Attach
+                        </button>
+                        <button class="tool-btn" title="Quick Questions">
+                            <i class="fas fa-question-circle"></i> Questions
+                        </button>
+                    </div>
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="message-input" 
+                            placeholder="Describe your symptoms or ask a medical question... (Press Enter to send, Shift+Enter for new line)"
+                            rows="2"
+                        ></textarea>
+                        <button class="send-btn" id="send-message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="input-suggestions">
+                        <span class="suggestion-label">Quick suggestions:</span>
+                        <button class="suggestion-btn">I have a headache and fever</button>
+                        <button class="suggestion-btn">Stomach pain and nausea</button>
+                        <button class="suggestion-btn">Cough and cold symptoms</button>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Panel - Medical Info -->
+            <aside class="info-panel">
+                <div class="panel-section diagnosis-panel">
+                    <div class="panel-header">
+                        <i class="fas fa-diagnoses"></i>
+                        <h3>Diagnosis & Analysis</h3>
+                    </div>
+                    <div class="panel-content" id="diagnosis-content">
+                        <div class="placeholder">
+                            <i class="fas fa-stethoscope"></i>
+                            <p>Diagnosis will appear here after symptom analysis</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-section treatment-panel">
+                    <div class="panel-header">
+                        <i class="fas fa-capsules"></i>
+                        <h3>Treatment Plan</h3>
+                    </div>
+                    <div class="panel-content" id="treatment-content">
+                        <div class="placeholder">
+                            <i class="fas fa-prescription-bottle-alt"></i>
+                            <p>Treatment recommendations will appear here</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-section tests-panel">
+                    <div class="panel-header">
+                        <i class="fas fa-vial"></i>
+                        <h3>Recommended Tests</h3>
+                    </div>
+                    <div class="panel-content" id="tests-content">
+                        <div class="placeholder">
+                            <i class="fas fa-microscope"></i>
+                            <p>Recommended tests will appear here</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-section report-panel">
+                    <div class="panel-header">
+                        <i class="fas fa-file-medical"></i>
+                        <h3>Medical Report</h3>
+                    </div>
+                    <div class="panel-content" id="report-content">
+                        <div class="placeholder">
+                            <i class="fas fa-file-download"></i>
+                            <p>Generate a comprehensive medical report</p>
+                            <button class="btn-primary" id="generate-report-btn" disabled>
+                                <i class="fas fa-file-pdf"></i> Generate PDF Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4><i class="fas fa-shield-alt"></i> Privacy & Security</h4>
+                    <p>Your data is encrypted and secure. We comply with HIPAA guidelines for medical data protection.</p>
+                </div>
+                <div class="footer-section">
+                    <h4><i class="fas fa-exclamation-circle"></i> Important Notice</h4>
+                    <p>This AI assistant provides information only. For medical emergencies, call 911 or visit the nearest hospital.</p>
+                </div>
+                <div class="footer-section">
+                    <h4><i class="fas fa-info-circle"></i> About Dr. HealthAI</h4>
+                    <p>Powered by advanced AI with medical knowledge base. Version 2.1.0</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Dr. HealthAI - AI Medical Assistant. For educational purposes only.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="symptom-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-stethoscope"></i> Symptom Checker</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="symptom-selector">
+                    <input type="text" id="symptom-search" placeholder="Search symptoms...">
+                    <div class="symptom-categories">
+                        <button class="category-btn active">All</button>
+                        <button class="category-btn">Respiratory</button>
+                        <button class="category-btn">Gastrointestinal</button>
+                        <button class="category-btn">Neurological</button>
+                        <button class="category-btn">General</button>
+                    </div>
+                    <div class="symptoms-list" id="symptoms-list">
+                        <!-- Symptoms will be populated here -->
+                    </div>
+                </div>
+                <div class="selected-symptoms">
+                    <h4>Selected Symptoms:</h4>
+                    <div id="selected-symptoms-container"></div>
+                    <button class="btn-primary" id="analyze-symptoms">
+                        <i class="fas fa-search"></i> Analyze Symptoms
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="report-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-medical"></i> Medical Report Generated</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="report-preview">
+                    <i class="fas fa-file-pdf"></i>
+                    <h4>Your Medical Report is Ready!</h4>
+                    <p>Download your comprehensive medical consultation report in PDF format.</p>
+                    <a href="#" class="btn-primary" id="download-report">
+                        <i class="fas fa-download"></i> Download PDF Report
+                    </a>
+                    <button class="btn-secondary" id="view-report">
+                        <i class="fas fa-eye"></i> View Online
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergency Modal -->
+    <div class="modal emergency-modal" id="emergency-modal">
+        <div class="modal-content">
+            <div class="modal-header emergency">
+                <h3><i class="fas fa-exclamation-triangle"></i> EMERGENCY ALERT</h3>
+            </div>
+            <div class="modal-body">
+                <div class="emergency-info">
+                    <i class="fas fa-ambulance"></i>
+                    <h4>IMMEDIATE MEDICAL ATTENTION REQUIRED</h4>
+                    <p>Based on your symptoms, you should seek emergency medical care immediately.</p>
+                    
+                    <div class="emergency-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <p><strong>CALL 911</strong> or your local emergency number</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <p>Go to the <strong>NEAREST EMERGENCY ROOM</strong></p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <p>Do <strong>NOT</strong> drive yourself if experiencing severe symptoms</p>
+                        </div>
+                    </div>
+                    
+                    <div class="emergency-contacts">
+                        <h5>Emergency Contacts:</h5>
+                        <ul>
+                            <li>National Suicide Prevention Lifeline: 988</li>
+                            <li>Poison Control: 1-800-222-1222</li>
+                            <li>Crisis Text Line: Text HOME to 741741</li>
+                        </ul>
+                    </div>
+                    
+                    <button class="btn-emergency" onclick="window.location.href='tel:911'">
+                        <i class="fas fa-phone"></i> CALL 911 NOW
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
